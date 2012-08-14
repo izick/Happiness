@@ -9,5 +9,7 @@
 #import "HappinessViewController.h"
 
 @implementation HappinessViewController
- 
+
+@synthesize faceview;
+
 @end
