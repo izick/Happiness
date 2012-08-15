@@ -10,6 +10,7 @@
 
 @interface HappinessViewController : UIViewController
 
-@property (nonatomic, strong) IBOutlet UIView *faceview;
+@property (nonatomic) int happiness;
+
 
 @end
