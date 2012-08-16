@@ -14,10 +14,17 @@
 @implementation FaceView
 
 @synthesize scale = _scale;
+@synthesize smile = _smile;
+@synthesize dataSource;
 
 - (void)setScale:(CGFloat)scale {
     _scale = scale;
     [self setNeedsDisplay];
+}
+
+- (void)setSmile:(CGFloat)happiness
+{
+    self.smile = (happiness - 50) / 50.0;
 }
 
 - (void)setup
@@ -89,16 +96,22 @@
 #define MOUTH_X 0.45
 #define MOUTH_Y 0.4
     
-    CGPoint left = midpoint, right = midpoint;
-    left.x -= radius * MOUTH_X;
-    left.y -= radius * MOUTH_Y;
-    right.x += radius * MOUTH_X;
-    right.y = left.y;
+    CGPoint start, end;
+    start.x = midpoint.x - radius * MOUTH_X;
+    start.y = midpoint.y + radius * MOUTH_Y;
+    end.x = midpoint.x + radius * MOUTH_X;
+    end.y = start.y;
+    
+    CGPoint center1 = start, center2 = end;
+    center1.y += ((radius / 3) * [self.dataSource smileForFaceView:self]);
+    center2.y = center1.y;
+    center1.x += radius * MOUTH_X * (2/3);
+    center2.x -= radius * MOUTH_X * (2/3);
     
     UIGraphicsPushContext(context);
     CGContextBeginPath(context);
-    CGContextAddCurveToPoint(context, left, <#CGFloat cp1y#>, <#CGFloat cp2x#>, <#CGFloat cp2y#>, <#CGFloat x#>, <#CGFloat y#>)
-    CGContextAddArc(context, midpoint.x - radius * MOUTH_X, midpoint.y + radius * MOUTH_Y, 20, 0, 20, NO);
+    CGContextMoveToPoint(context, start.x, start.y);
+    CGContextAddCurveToPoint(context, center1.x, center1.y, center2.x, center2.y, end.x, end.y);
     CGContextStrokePath(context);
     UIGraphicsPopContext();
 }
@@ -112,4 +125,5 @@
     }
         
 }
+
 @end
